@@ -41,13 +41,11 @@ public:
 //--------------------------------------------------------------------------------------------------
 protected:
 
-	//TODO: Students to code these functions.
 	void GenerateRandomChromosomes();
 	void ClearChromosomes();
 
 	void UpdateAILanders(float deltaTime, SDL_Event e);
 	void CalculateFitness();
-	//fitnessCalc
 
 	void Selection();
 	void Crossover();

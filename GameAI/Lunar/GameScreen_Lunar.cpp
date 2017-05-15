@@ -179,8 +179,10 @@ void GameScreen_Lunar::Update(float deltaTime, SDL_Event e)
 			cout << fitness << endl << endl;
 		}
 		else
-		if (mAIOn)
-			UpdateAILanders(deltaTime, e);
+		{
+			if (mAIOn)
+				UpdateAILanders(deltaTime, e);
+		}
 	}
 }
 
@@ -642,7 +644,6 @@ void GameScreen_Lunar::Mutation()
 		{
 			if (rand() % 10000 < myMutationRate)
 			{
-				//int randomNumber = rand() % kNumberOfChromosomeElements;
 				int randAction = (rand() % 4);
 
 				switch (randAction)

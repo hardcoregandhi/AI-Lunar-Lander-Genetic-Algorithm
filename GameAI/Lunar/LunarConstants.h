@@ -21,11 +21,6 @@ const int	 kNumberOfChromosomeElements = 100;
 const int	 kCrossoverRate				 = 5000; //This is in a range of ints up to 10000 making it 50%
 const int	 kMutationRate				 = 500;	 //This is in a range of ints up to 10000 making it 5%
 
-//const float	 kLandingBonus				 = 1000.0f;
-//const double kDistWeight				 = 0.33;
-//const double kRotWeight					 = 400.0;
-//const double kAirTimeWeight				 = 4.0;
-
 const float	 kLandingBonus				 = 100000.0f;
 const double kDistWeight				 = 20;
 const double kRotWeight					 = 40;
