@@ -181,7 +181,7 @@ void LunarLander::Reset()
 	mPosition		 = mStartPosition;
 	mVelocity		 = Vector2D();
 	mHeading		 = Vector2D(0.0f, -1.0f);
-	mRotationAngle	 = 0.0f;
+	mRotationAngle	 = 360.0f;
 	mSurvivalTime	 = 0.0;
 	mThrusting		 = false;
 	mThrustingTime	 = 0.0f;

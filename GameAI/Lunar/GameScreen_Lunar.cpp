@@ -155,7 +155,16 @@ void GameScreen_Lunar::Update(float deltaTime, SDL_Event e)
 
 			RotFitness = mLunarLander->GetRotationAngle();
 
-			SurvFitness = mLunarLander->GetSurvivalTime() / (mLunarLander->GetSpeed() + 1);
+			double relativeRotation;
+			if (mLunarLander->GetRotationAngle() > 180) {
+				relativeRotation = abs(mLunarLander->GetRotationAngle() - 360);
+			} else {
+				relativeRotation = mLunarLander->GetRotationAngle();
+			}
+			cout << relativeRotation << endl;
+			RotFitness = 360 - relativeRotation;
+
+			SurvFitness = (mLunarLander->GetSurvivalTime() / (mLunarLander->GetSpeed() + 1)) /10;
 
 			/*		if (mLunarLander->HasLanded())
 			fitness = (MaxDouble / 2) + DistFitness + (400 * RotFitness) + (4 * SurvFitness);//half allows for improvement in the successful landers
@@ -163,7 +172,7 @@ void GameScreen_Lunar::Update(float deltaTime, SDL_Event e)
 			fitness = DistFitness + (400 * RotFitness) + (4 * SurvFitness);*/
 
 			if (mLunarLander->HasLanded())
-				fitness = kLandingBonus;
+				fitness = kLandingBonus + kDistWeight - SurvFitness;
 			else
 				fitness = (kDistWeight*DistFitness) + (RotFitness*kRotWeight) + (SurvFitness*kAirTimeWeight);
 
@@ -173,10 +182,25 @@ void GameScreen_Lunar::Update(float deltaTime, SDL_Event e)
 			//cout << "fabs(mPlatformPosition.x - mLunarLander->GetPosition().x) = " << fabs(mPlatformPosition.x - mLunarLander->GetPosition().x) << endl;
 			//cout << "kLunarScreenWidth - (mPlatformPosition.x - mLunarLander->GetPosition().x) = " << kLunarScreenWidth - fabs(mPlatformPosition.x - mLunarLander->GetPosition().x) << endl;
 
-			cout << kDistWeight * DistFitness << "	 ";
-			cout << kRotWeight * RotFitness << "   	";
-			cout << kAirTimeWeight * SurvFitness << endl;
-			cout << fitness << endl << endl;
+			double distanceScore = kDistWeight * DistFitness;
+			double rotScore = kRotWeight * RotFitness;
+			double timeScore = kAirTimeWeight * SurvFitness;
+
+			//cout << kDistWeight * DistFitness << "	 ";
+			//cout << kRotWeight * RotFitness << "   	";
+			//cout << kAirTimeWeight * SurvFitness << endl;
+			//cout << fitness << endl << endl;
+
+			cout << "DistFitness: " << DistFitness << endl;
+			cout << "RotFitness: " << RotFitness << endl;
+			cout << "SurvFitness: " << SurvFitness << endl;
+
+			cout << "Distance Score: " << distanceScore << endl;
+			cout << "rot Score: " << rotScore << endl;
+			cout << "Time Score: " << timeScore << endl;
+			cout << "Total Fitness: " << fitness << endl;
+
+			
 		}
 		else
 		{
@@ -227,6 +251,7 @@ void GameScreen_Lunar::ClearChromosomes()
 }
 
 //--------------------------------------------------------------------------------------------------
+bool FinalGloryRun = false;
 
 void GameScreen_Lunar::UpdateAILanders(float deltaTime, SDL_Event e)
 {
@@ -316,8 +341,11 @@ void GameScreen_Lunar::UpdateAILanders(float deltaTime, SDL_Event e)
 			{
 				mAILanders[i]->Render();
 			}
+			if (FinalGloryRun == true)
+				mPause = true;
+
 			SaveSolution();
-			mPause = true;
+			FinalGloryRun = true;
 		}
 		else
 		{
@@ -353,7 +381,14 @@ void GameScreen_Lunar::CalculateFitness()
 		DistFitness = ((kLunarScreenWidth - fabs(mPlatformPosition.x - mAILanders[i]->GetPosition().x)) +
 				       (kLunarScreenHeight - (mPlatformPosition.y - mAILanders[i]->GetPosition().y)));
 
-		RotFitness = mAILanders[i]->GetRotationAngle();
+		double relativeRotation;
+		if (mLunarLander->GetRotationAngle() > 180) {
+			relativeRotation = abs(mLunarLander->GetRotationAngle() - 360);
+		}
+		else {
+			relativeRotation = mLunarLander->GetRotationAngle();
+		}
+		RotFitness = 360 - relativeRotation;
 
 		SurvFitness = mAILanders[i]->GetSurvivalTime() / (mAILanders[i]->GetSpeed() + 1);
 
@@ -376,8 +411,11 @@ void GameScreen_Lunar::CalculateFitness()
 		mFitnessValues[i] = fitness;
 	}
 
-//	for (int i = 0; i < kNumberOfAILanders; i++)
-//		cout << i << " Fitnes: " << mFitnessValues[i] << endl;
+	double totalFitness = 0;
+	for (int i = 0; i < kNumberOfAILanders; i++)
+		totalFitness += mFitnessValues[i];
+
+	cout << "Average Fitness: " << totalFitness / kNumberOfAILanders << endl;
 
 }
 //--------------------------------------------------------------------------------------------------

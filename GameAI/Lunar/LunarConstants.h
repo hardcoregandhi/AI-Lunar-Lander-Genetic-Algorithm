@@ -24,7 +24,7 @@ const int	 kMutationRate				 = 500;	 //This is in a range of ints up to 10000 ma
 const float	 kLandingBonus				 = 100000.0f;
 const double kDistWeight				 = 20;
 const double kRotWeight					 = 40;
-const double kAirTimeWeight				 = 1;
+const double kAirTimeWeight				 = 0.8;
 
 const double kThrustDuration			 = 0.1;
 
